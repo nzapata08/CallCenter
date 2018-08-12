@@ -56,7 +56,7 @@ public class CallCenter {
      * 
      * @param llamado
      */
-    public void dispatchCall(Llamado llamado) {
+    public  void dispatchCall(Llamado llamado) {
         llamadosPendientes.add(llamado);
         semaforoLlamadoPendiente.release();
 

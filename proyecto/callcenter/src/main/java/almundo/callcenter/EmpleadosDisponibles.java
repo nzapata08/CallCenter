@@ -37,7 +37,7 @@ public class EmpleadosDisponibles {
      * 
      * @return Devuelve un empleado segun un orden de prioridad
      */
-    public Empleado getEmpleado() {
+    public synchronized Empleado getEmpleado() {
         Empleado empleadoInterface = null;
 
         if(!getOperadores().isEmpty()) {
@@ -62,6 +62,7 @@ public class EmpleadosDisponibles {
     public synchronized void liberarEmpleado(Empleado empleado) {
         empleado.agregarmeAEmpleadosDisponibles(this);
         semaforoEmpleadoLibre.release();
+
     }
 
     /**
@@ -95,7 +96,7 @@ public class EmpleadosDisponibles {
      * 
      * @return Devuelve la cola de operadores
      */
-    public synchronized Queue<Operador> getOperadores() {
+    private Queue<Operador> getOperadores() {
         return operadores;
     }
 
@@ -103,7 +104,7 @@ public class EmpleadosDisponibles {
      * 
      * @return Devuelve la cola de supervisores
      */
-    public synchronized Queue<Supervisor> getSupervisores() {
+    private Queue<Supervisor> getSupervisores() {
         return supervisores;
     }
 
@@ -111,7 +112,7 @@ public class EmpleadosDisponibles {
      * 
      * @return Devuelve la cola de directores
      */
-    public synchronized Queue<Director> getDirectores() {
+    private Queue<Director> getDirectores() {
         return directores;
     }
 

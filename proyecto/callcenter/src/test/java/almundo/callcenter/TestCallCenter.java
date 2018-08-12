@@ -11,8 +11,7 @@ public class TestCallCenter extends TestCase {
             CallCenter dispatchCallCenter = CallCenter.getInstancia();
 
             for (int i = 1; i <= 11; i++) {
-                Math.random();
-
+                int duracionLlamad = (int)(Math.random()*(10-5))+5;
                 Llamado llamado = new Llamado(5);
                 dispatchCallCenter.dispatchCall(llamado);
             }
