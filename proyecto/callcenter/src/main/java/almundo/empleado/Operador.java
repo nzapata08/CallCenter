@@ -36,12 +36,12 @@ public class Operador extends EmpleadoAbstract {
     public void agregarmeAEmpleadosDisponibles(EmpleadosDisponibles disponibilidad) {
         disponibilidad.agregarOperador(this);
     }
-    
+
     @Override
     protected void hablar() {
         System.out.println("Hablando Operador " + (new Date()).toString());
     }
-    
+
     /**
      * Finaliza el llamado
      */

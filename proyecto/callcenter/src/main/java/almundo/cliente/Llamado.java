@@ -7,9 +7,9 @@ package almundo.cliente;
  *
  */
 public class Llamado {
-    
+
     private int tiempoDeLlamado;
-    
+
     /**
      * Constructo que recibe el tiempo que va a
      * durar la llamada
