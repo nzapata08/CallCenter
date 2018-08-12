@@ -9,6 +9,7 @@ package almundo.cliente;
 public class Llamado {
 
     private int tiempoDeLlamado;
+    private boolean seRecepcionoLlamado;
 
     /**
      * Constructo que recibe el tiempo que va a
@@ -35,5 +36,23 @@ public class Llamado {
      */
     public void setTiempoDeLlamado(int tiempoDeLlamado) {
         this.tiempoDeLlamado = tiempoDeLlamado;
+    }
+
+    /**
+     * Devuelve true si se se recepcion llamado
+     * 
+     * @return Devuelve true si se se recepcion llamado
+     */
+    public boolean isSeRecepcionoLlamado() {
+        return seRecepcionoLlamado;
+    }
+
+    /**
+     * Setea si se recepciono la llamada
+     * 
+     * @param seRecepcionoLlamado ¿Se recepciono la llamada?
+     */
+    public void setSeRecepcionoLlamado(boolean seRecepcionoLlamado) {
+        this.seRecepcionoLlamado = seRecepcionoLlamado;
     }
 }

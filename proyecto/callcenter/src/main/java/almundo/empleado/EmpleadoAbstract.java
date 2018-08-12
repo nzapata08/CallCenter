@@ -54,6 +54,7 @@ public abstract class EmpleadoAbstract implements Empleado {
         }
 
         this.finalizarLLamado();
+        this.llamado.setSeRecepcionoLlamado(true);
         empleadosDisponibles.liberarEmpleado(this);
     }
 

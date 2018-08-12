@@ -1,33 +1,62 @@
 package almundo.callcenter;
 
-import almundo.cliente.Llamado;
+import java.util.ArrayList;
+import java.util.List;
+
+import almundo.cliente.Cliente;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class TestCallCenter extends TestCase {
 
+    /**
+     * Se procedio a realizar una clase CallCenter que se encargue de recibir todos los llamados
+     * y los encola para que despues un hilo independiente Dispatch los vaya asignando a los empleados
+     * disponibles, por cada empleado disponible se genera un hilo para que atienda los llamados
+     * concurrentemente con otros, cuando se libera el empleado este se vuelve a agregar a la cola
+     * de empleados disponibles y a traves de un semaforo sincroniza con el dispatch para que este
+     * sepa que hay un empleado disponible en caso de llamado, En caso de no haber empleados disponibles
+     * las llamadas quedan encoladas y el dispatcher queda a la espera de algun empleado
+     * que las pueda procesar y en caso de no haber llamadas pendientes el dispatcher queda a la espera
+     * de una llamada bloqueandose con un semaforo, cuando llega un llamado ese semaforo es incrementado
+     * para que el dispatcher sepa que hay una llamada pendiente
+     * 
+     */
+    /**
+     * 
+     */
     public void testCallCenter() {
         try {
-            CallCenter dispatchCallCenter = CallCenter.getInstancia();
+            int cantLlamadosProcesados = 0;
+            int cantLlamadosEmitidos = 10;
 
-            for (int i = 1; i <= 11; i++) {
-                int duracionLlamad = (int)(Math.random()*(10-5))+5;
-                Llamado llamado = new Llamado(5);
-                dispatchCallCenter.dispatchCall(llamado);
+            CallCenter.getInstancia();
+
+            List<Cliente> clientes = new ArrayList<Cliente>();
+            for (int i = 1; i <= cantLlamadosEmitidos; i++) {
+                Cliente cliente = new Cliente();
+                clientes.add(cliente);
+                cliente.start();
             }
 
-            //Sleep para mostrar el procesamiento de los llamados realizados
-            Thread.sleep(10000);
 
-            dispatchCallCenter.setRecepcionarLlamados(false);
+            for (Cliente cliente : clientes) {
+                while (!cliente.seRecepcionoLlamado()) {
+                    Thread.sleep(300);
+                }
+                cantLlamadosProcesados++;
+            }
 
-            assertTrue(true);
+            CallCenter.getInstancia().setRecepcionarLlamados(false);
+
+            if(cantLlamadosProcesados == cantLlamadosEmitidos) {
+                assertTrue(true);
+            } else {
+                Assert.fail("No se recibieron todos los llamados");
+            }
 
         } catch (Exception e) { 
             Assert.fail( e.getMessage());
         }
-
     }
-
-
 }

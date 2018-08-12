@@ -35,7 +35,7 @@ public class CallCenter {
     private static CallCenter dispatchCallCenter;
     private boolean recepcionarLlamados = true;
 
-    public static CallCenter getInstancia() {
+    public synchronized static CallCenter getInstancia() {
         if(dispatchCallCenter == null) {
             dispatchCallCenter = new CallCenter();
         }
@@ -77,7 +77,7 @@ public class CallCenter {
      * @return Devuelve un llamado pendiente
      */
     public Llamado getLlamado() {
-        return llamadosPendientes.element();
+        return llamadosPendientes.remove();
     }
 
     /**
