@@ -38,11 +38,11 @@ public class Dispatch implements Runnable {
     @Override
     public void run() {
         try {
-            while (DispatchCallCenter.getInstancia().isRecepcionarLlamados()) {
+            while (CallCenter.getInstancia().isRecepcionarLlamados()) {
                 dispatchCall();
             }
         } catch (InterruptedException e) {
-            DispatchCallCenter.getInstancia().setHuboErrorEnCallCenter(true);
+            CallCenter.getInstancia().setHuboErrorEnCallCenter(true);
         }
     }
 
@@ -53,7 +53,7 @@ public class Dispatch implements Runnable {
      */
     public void dispatchCall() throws InterruptedException {
         semaforollamadoPendiente.acquire();
-        Llamado llamadoActual = DispatchCallCenter.getInstancia().getLlamado();
+        Llamado llamadoActual = CallCenter.getInstancia().getLlamado();
 
         semaforoEmpleadoLibre.acquire();
         Empleado empleado = empleadosDisponibles.getEmpleado();

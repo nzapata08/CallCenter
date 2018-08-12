@@ -16,7 +16,7 @@ import almundo.empleado.Supervisor;
  * @author Nelson Zapata
  *
  */
-public class DispatchCallCenter {
+public class CallCenter {
 
     private int cantidadOperadores = 3;
     private int cantidadSupervisores = 2;
@@ -27,12 +27,12 @@ public class DispatchCallCenter {
     private EmpleadosDisponibles empleadosDisponibles;
     private boolean huboErrorEnCallCenter = false;
 
-    private static DispatchCallCenter dispatchCallCenter;
+    private static CallCenter dispatchCallCenter;
     private boolean recepcionarLlamados = true;
 
-    public static DispatchCallCenter getInstancia() {
+    public static CallCenter getInstancia() {
         if(dispatchCallCenter == null) {
-            dispatchCallCenter = new DispatchCallCenter();
+            dispatchCallCenter = new CallCenter();
         }
         return dispatchCallCenter;
     }
@@ -40,7 +40,7 @@ public class DispatchCallCenter {
     /**
      * Constructor sin parametros
      */
-    private DispatchCallCenter () {
+    private CallCenter () {
         inicializar();
     }
 

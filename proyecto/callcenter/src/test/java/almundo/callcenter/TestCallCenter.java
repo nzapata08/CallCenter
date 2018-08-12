@@ -8,7 +8,7 @@ public class TestCallCenter extends TestCase {
 
     public void testCallCenter() {
         try {
-            DispatchCallCenter dispatchCallCenter = DispatchCallCenter.getInstancia();
+            CallCenter dispatchCallCenter = CallCenter.getInstancia();
 
             for (int i = 1; i <= 11; i++) {
                 Math.random();
