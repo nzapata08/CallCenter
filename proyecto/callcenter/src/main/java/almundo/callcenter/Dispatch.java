@@ -12,7 +12,7 @@ import almundo.empleado.Empleado;
  * @author Nelson Zapata
  *
  */
-public class CallCenter implements Runnable {
+public class Dispatch implements Runnable {
 
     private EmpleadosDisponibles empleadosDisponibles;
     private Semaphore semaforollamadoPendiente;
@@ -25,7 +25,7 @@ public class CallCenter implements Runnable {
      * @param semaforoEmpleadoLibre Semaforo que determina si hay empleado libre para atender llamado
      * @param empleadosDisponibles Repositorio de empleados que atienden llamados
      */
-    public CallCenter(Semaphore semaforollamadoPendiente, Semaphore semaforoEmpleadoLibre, EmpleadosDisponibles empleadosDisponibles) {
+    public Dispatch(Semaphore semaforollamadoPendiente, Semaphore semaforoEmpleadoLibre, EmpleadosDisponibles empleadosDisponibles) {
         this.semaforollamadoPendiente = semaforollamadoPendiente;
         this.empleadosDisponibles = empleadosDisponibles;
         this.semaforoEmpleadoLibre = semaforoEmpleadoLibre;

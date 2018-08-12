@@ -47,7 +47,7 @@ public class DispatchCallCenter {
     public void inicializar() {
         empleadosDisponibles = new EmpleadosDisponibles(semaforoEmpleadoLibre);
         iniciarEmpleados(empleadosDisponibles);
-        Thread dispatcher = new Thread(new CallCenter(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
+        Thread dispatcher = new Thread(new Dispatch(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
         dispatcher.start();
     }
 
@@ -62,7 +62,7 @@ public class DispatchCallCenter {
 
         // En caso de haber error se vuelve a lanzar hilo gestor de llamadas
         if(this.huboErrorEnCallCenter) {
-            Thread dispatcher = new Thread(new CallCenter(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
+            Thread dispatcher = new Thread(new Dispatch(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
             dispatcher.start();
         }
     }   
