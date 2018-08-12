@@ -39,17 +39,24 @@ public class CallCenter implements Runnable {
     public void run() {
         try {
             while (DispatchCallCenter.getInstancia().isRecepcionarLlamados()) {
-                semaforollamadoPendiente.acquire();
-                Llamado llamadoActual = DispatchCallCenter.getInstancia().getLlamado();
-
-                semaforoEmpleadoLibre.acquire();
-                Empleado empleado = empleadosDisponibles.getEmpleado();
-                empleado.asignarLlamado(llamadoActual);
+                dispatchCall();
             }
-
         } catch (InterruptedException e) {
             DispatchCallCenter.getInstancia().setHuboErrorEnCallCenter(true);
         }
+    }
 
+    /**
+     * Asigna a un empleado una llamada
+     * 
+     * @throws InterruptedException Error al adquirir recurso
+     */
+    public void dispatchCall() throws InterruptedException {
+        semaforollamadoPendiente.acquire();
+        Llamado llamadoActual = DispatchCallCenter.getInstancia().getLlamado();
+
+        semaforoEmpleadoLibre.acquire();
+        Empleado empleado = empleadosDisponibles.getEmpleado();
+        empleado.asignarLlamado(llamadoActual);
     }
 }

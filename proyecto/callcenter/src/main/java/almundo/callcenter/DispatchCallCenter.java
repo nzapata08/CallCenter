@@ -18,8 +18,8 @@ import almundo.empleado.Supervisor;
  */
 public class DispatchCallCenter {
 
-    private int cantidadOperadores = 7;
-    private int cantidadSupervisores = 3;
+    private int cantidadOperadores = 3;
+    private int cantidadSupervisores = 2;
     private int cantidadDirectorores = 1;
     private  Queue<Llamado> llamadosPendientes = new LinkedList<Llamado>();
     private  Semaphore semaforoLlamadoPendiente = new Semaphore(0);
