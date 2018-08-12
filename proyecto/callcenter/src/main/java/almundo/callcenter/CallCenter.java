@@ -10,7 +10,12 @@ import almundo.empleado.Operador;
 import almundo.empleado.Supervisor;
 
 /**
- * Clase encargada de inicializar 
+ * Clase encargada de inicializar el dispatcher
+ *  que se encarga de la gestion de llamadas y empleados libres,
+ *  Inicializa empleados a los cuales se les asignara una llamada
+ *  y recibe llamadas las cuales seran encoladas para que luego 
+ *  el dispatcher las tome y las procese
+ *  
  * 
  * 
  * @author Nelson Zapata
@@ -56,7 +61,7 @@ public class CallCenter {
      * 
      * @param llamado
      */
-    public  void dispatchCall(Llamado llamado) {
+    public synchronized void dispatchCall(Llamado llamado) {
         llamadosPendientes.add(llamado);
         semaforoLlamadoPendiente.release();
 

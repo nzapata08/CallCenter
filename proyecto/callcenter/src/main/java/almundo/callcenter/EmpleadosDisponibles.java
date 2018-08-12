@@ -70,7 +70,9 @@ public class EmpleadosDisponibles {
      * 
      * @param supervisor Supervisor
      */
-    public void agregarSupervisor(Supervisor supervisor) {
+    public synchronized void agregarSupervisor(Supervisor supervisor) {
+        System.out.println("SE LIBERO SUPERVISOR");
+        
         getSupervisores().add(supervisor); 
     }
 
@@ -79,7 +81,9 @@ public class EmpleadosDisponibles {
      * 
      * @param director Director
      */
-    public void agregarDirector(Director director) {
+    public synchronized void agregarDirector(Director director) {
+        
+        System.out.println("SE LIBERO DIRECTOR");
         getDirectores().add(director); 
     }
 
@@ -88,7 +92,8 @@ public class EmpleadosDisponibles {
      * 
      * @param operador Operador
      */
-    public void agregarOperador(Operador operador) {
+    public synchronized void agregarOperador(Operador operador) {
+        System.out.println("SE LIBERO OPERADOR");
         getOperadores().add(operador);    
     }
 
