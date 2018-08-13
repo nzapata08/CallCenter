@@ -22,9 +22,6 @@ public class TestCallCenter extends TestCase {
      * para que el dispatcher sepa que hay una llamada pendiente
      * 
      */
-    /**
-     * 
-     */
     public void testCallCenter() {
         try {
             int cantLlamadosEmitidos = 11;
