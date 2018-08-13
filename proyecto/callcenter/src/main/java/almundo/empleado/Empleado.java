@@ -17,7 +17,7 @@ public interface Empleado extends Runnable {
      * @param llamado Llamado a asignar al empleado
      */
     void asignarLlamado(Llamado llamado);
-    
+
     /**
      * Se devuelve como empleado disponible segun le corresponda
      * 

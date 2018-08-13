@@ -1,6 +1,6 @@
 package almundo.empleado;
 
-import almundo.callcenter.DispatchCallCenter;
+import almundo.callcenter.CallCenter;
 import almundo.callcenter.EmpleadosDisponibles;
 import almundo.cliente.Llamado;
 
@@ -50,10 +50,11 @@ public abstract class EmpleadoAbstract implements Empleado {
             Thread.sleep(getLlamado().getTiempoDeLlamado() * 1000);
         } catch (InterruptedException e) {
             //Devuelve el llamado para que sea procesado nuevamente en caso de error
-            DispatchCallCenter.getInstancia().dispatchCall(llamado);
+            CallCenter.getInstancia().dispatchCall(llamado);
         }
 
         this.finalizarLLamado();
+        this.llamado.setSeRecepcionoLlamado(true);
         empleadosDisponibles.liberarEmpleado(this);
     }
 

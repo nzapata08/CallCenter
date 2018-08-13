@@ -1,55 +1,136 @@
 package almundo.callcenter;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 import almundo.cliente.Llamado;
-import almundo.empleado.Empleado;
+import almundo.empleado.Director;
+import almundo.empleado.Operador;
+import almundo.empleado.Supervisor;
 
 /**
- * Clase encargada de consumir llamados y asignarselos
- * a un empleado que se encuentre disponible
+ * Clase encargada de inicializar el dispatcher
+ *  que se encarga de la gestion de llamadas y empleados libres,
+ *  Inicializa empleados a los cuales se les asignara una llamada
+ *  y recibe llamadas las cuales seran encoladas para que luego 
+ *  el dispatcher las tome y las procese
+ *  
+ * 
  * 
  * @author Nelson Zapata
  *
  */
-public class CallCenter implements Runnable {
+public class CallCenter {
 
+    private int cantidadOperadores = 3;
+    private int cantidadSupervisores = 2;
+    private int cantidadDirectorores = 1;
+    private  Queue<Llamado> llamadosPendientes = new LinkedList<Llamado>();
+    private  Semaphore semaforoLlamadoPendiente = new Semaphore(0);
+    private Semaphore semaforoEmpleadoLibre = new Semaphore(cantidadOperadores + cantidadSupervisores + cantidadDirectorores);
     private EmpleadosDisponibles empleadosDisponibles;
-    private Semaphore semaforollamadoPendiente;
-    private Semaphore semaforoEmpleadoLibre;
+    private boolean huboErrorEnCallCenter = false;
 
-    /**
-     * Constructor con parametros
-     * 
-     * @param semaforollamadoPendiente Semaforo para notificacion de llamados pendientes
-     * @param semaforoEmpleadoLibre Semaforo que determina si hay empleado libre para atender llamado
-     * @param empleadosDisponibles Repositorio de empleados que atienden llamados
-     */
-    public CallCenter(Semaphore semaforollamadoPendiente, Semaphore semaforoEmpleadoLibre, EmpleadosDisponibles empleadosDisponibles) {
-        this.semaforollamadoPendiente = semaforollamadoPendiente;
-        this.empleadosDisponibles = empleadosDisponibles;
-        this.semaforoEmpleadoLibre = semaforoEmpleadoLibre;
+    private static CallCenter dispatchCallCenter;
+    private boolean recepcionarLlamados = true;
+
+    public synchronized static CallCenter getInstancia() {
+        if(dispatchCallCenter == null) {
+            dispatchCallCenter = new CallCenter();
+        }
+        return dispatchCallCenter;
     }
 
     /**
-     * Metodo que consume llamadas pendientes
-     * y se las asigna a un empleado para que las atienda
+     * Constructor sin parametros
      */
-    @Override
-    public void run() {
-        try {
-            while (DispatchCallCenter.getInstancia().isRecepcionarLlamados()) {
-                semaforollamadoPendiente.acquire();
-                Llamado llamadoActual = DispatchCallCenter.getInstancia().getLlamado();
+    private CallCenter () {
+        inicializar();
+    }
 
-                semaforoEmpleadoLibre.acquire();
-                Empleado empleado = empleadosDisponibles.getEmpleado();
-                empleado.asignarLlamado(llamadoActual);
-            }
+    public void inicializar() {
+        empleadosDisponibles = new EmpleadosDisponibles(semaforoEmpleadoLibre);
+        iniciarEmpleados(empleadosDisponibles);
+        Thread dispatcher = new Thread(new Dispatch(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
+        dispatcher.start();
+    }
 
-        } catch (InterruptedException e) {
-            DispatchCallCenter.getInstancia().setHuboErrorEnCallCenter(true);
+    /**
+     * Atiende un llamado y lo agrega a una cola para ser procesado
+     * 
+     * @param llamado
+     */
+    public synchronized void dispatchCall(Llamado llamado) {
+        llamadosPendientes.add(llamado);
+        semaforoLlamadoPendiente.release();
+
+        // En caso de haber error se vuelve a lanzar hilo gestor de llamadas
+        if(this.huboErrorEnCallCenter) {
+            Thread dispatcher = new Thread(new Dispatch(semaforoLlamadoPendiente, semaforoEmpleadoLibre, empleadosDisponibles));
+            dispatcher.start();
+        }
+    }   
+
+    /**
+     * 
+     * @return Devuelve un llamado pendiente
+     */
+    public Llamado getLlamado() {
+        return llamadosPendientes.remove();
+    }
+
+    /**
+     * 
+     * @return Devuelve true si hay que parar de recibir llamados, false en caso contrario
+     */
+    public boolean isRecepcionarLlamados() {
+        return recepcionarLlamados;
+    }
+
+    /**
+     * Setea si hay que recepcionar llamados o no
+     * 
+     * @param recepcionarLlamados ¿Recepcionar llamados?
+     */
+    public void setRecepcionarLlamados(boolean recepcionarLlamados) {
+        this.recepcionarLlamados = recepcionarLlamados;
+    }
+
+    /**
+     * Inicializa los empleados segun parametros iniciales
+     * 
+     * @param empleadosDisponibles Repositorio de empleados
+     */
+    private void iniciarEmpleados(EmpleadosDisponibles empleadosDisponibles) {
+        for (int i = 1; i <= cantidadOperadores; i++){
+            empleadosDisponibles.agregarOperador(new Operador(empleadosDisponibles));
         }
 
+        for (int i = 1; i <= cantidadSupervisores; i++){
+            empleadosDisponibles.agregarSupervisor(new Supervisor(empleadosDisponibles));
+        }
+
+        for (int i = 1; i <= cantidadDirectorores; i++){
+            empleadosDisponibles.agregarDirector(new Director(empleadosDisponibles));
+        }
+    }
+
+    /**
+     * Devuelve true si hubo error en el call center
+     * 
+     * Devuelve true si hubo error en el call center
+     */
+    public boolean isHuboErrorEnCallCenter() {
+        return huboErrorEnCallCenter;
+    }
+
+    /**
+     * Setea si hubo error en el call center
+     * 
+     * @param huboErrorEnCallCenter ¿ Hubo error en el call center?
+     */
+    public void setHuboErrorEnCallCenter(boolean huboErrorEnCallCenter) {
+        this.huboErrorEnCallCenter = huboErrorEnCallCenter;
     }
 }
