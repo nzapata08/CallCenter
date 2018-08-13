@@ -35,7 +35,6 @@ public class TestCallCenter extends TestCase {
                 cliente.start();
             }
 
-
             //Sleep para mosrar el procesamiento de llamados
             Thread.sleep(25000);
 
